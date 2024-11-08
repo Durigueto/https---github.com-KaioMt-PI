@@ -24,5 +24,51 @@
     <br>
 
 </body>
+<script src="https://kit.fontawesome.com/a81368914c.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios@1.6.7/dist/axios.min.js"></script>
+<script>
 
-<%- include('partials/footer')%>
+    const dataReceived = JSON.parse(localStorage.getItem('userInfo'));
+
+    id = dataReceived.ID;
+
+    document.getElementById("titulodoc").value = dataReceived.title;
+    document.getElementById("destinatario").value = dataReceived.dest;
+    document.getElementById("Doc").value = dataReceived.doc;
+
+
+    function updateCreatDoc() {
+        let inputTitle = document.getElementById("titulodoc");
+        let inputDest = document.getElementById("destinatario");
+        let inputDoc = document.getElementById("Doc");
+
+        let Documento = {
+            titulo: inputTitle.value,
+            doc: inputDoc.value,
+            destinatario: inputDest.value
+        }
+
+        if (dataReceived) {
+            axios.put("http://localhost:8080/documento/" + id, Documento).then(response => {
+                if (response.status === 200) {
+                    alert("Docuemtno atualizado")
+                }
+            }).catch(err => {
+                console.log(err);
+            })
+            localStorage.clear();
+        }
+        else {
+            axios.post("http://localhost:8080/documento", Documento).then(response => {
+                if (response.status === 200) {
+                    alert("Docuemtno cadastrado")
+                }
+            }).catch(err => {
+                console.log(err);
+            })
+        }
+    }
+</script>
+<script type="text/javascript" src="../js/main.js"></script>
+
+</html>
